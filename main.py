@@ -8,8 +8,8 @@ Created on Fri Mar 25 10:24:32 2022
 
 reference:
 
-https://blog.csdn.net/weixin_40247876/article/details/117216013
 https://pysource.com/2021/01/28/object-tracking-with-opencv-and-python/
+https://its401.com/article/weixin_40247876/117216013
 
 """
 
@@ -70,18 +70,21 @@ from tracker import *
 
 # Object detection from Stable camera
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('test.mp4')
 
 tracker  = EuclideanDistTracker()
 
-object_detector = cv2.createBackgroundSubtractorMOG2(history = 100 , varThreshold = 40)
+object_detector = cv2.createBackgroundSubtractorMOG2(history = 500 , varThreshold =16)
 
 while True:
     ret, frame = cap.read()
-    # height, width, _ = frame.shape
+    height, width, _ = frame.shape
 
     # Extract Region of interest
     roi = frame[100: 300,200: 500]
+    
+    # roi = frame[400: 1000, 500:1250]
+
 
     # 1. Object Detection
     mask = object_detector.apply(frame)
@@ -98,16 +101,17 @@ while True:
             
             x, y, w, h = cv2.boundingRect(cnt)
             detections.append([x, y, w, h])
-            
+            cv2.rectangle(roi, (x, y), (x + w, y + h), (0, 255, 0), 3)
+
     # 2. Object Tracking
     boxes_ids = tracker.update(detections)
     
     for box_id in boxes_ids:
-        x, y, w, h, id = box_id
-        cv2.putText(roi, str(id), (x, y - 15), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 2)
-        cv2.rectangle(roi, (x, y), (x + w, y + h), (0, 255, 0), 3)
-    
-    print(detections)
+        x, y, w, h, _id = box_id
+        cv2.putText(roi, str(_id), (x, y - 15), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 2)
+        # cv2.rectangle(roi, (x-w, y-h), (x + w, y + h), (0, 255, 0), 3)
+
+    # print(detections)
     
     cv2.imshow("mask", mask)
     cv2.imshow("frame", frame)
