@@ -35,6 +35,8 @@ cap.release()
 
 cap = cv2.VideoCapture(0)
 
+object_detector = cv2.createBackgroundSubtractorMOG2(history = 100 , varThreshold =40)
+
 while True:
     ret, frame = cap.read()
     # height, width, _ = frame.shape
@@ -51,7 +53,7 @@ while True:
         # Calculate area and remove small elements
         area = cv2.contourArea(cnt)
         if area > 100:
-            cv2.drawContours(roi, [cnt], -1, (0, 255, 0), 2)
+            cv2.drawContours(frame, [cnt], -1, (0, 255, 0), 2)
             
     cv2.imshow("mask", mask)
     cv2.imshow("frame", frame)
@@ -124,4 +126,4 @@ while True:
 cv2.destroyAllWindows()
 cap.release()
 
-
+#%%
