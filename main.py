@@ -21,7 +21,7 @@ if label == 1:
     label = 0
 
 #%%
-path =r'C:\Users\Jason\Desktop\20220416\IMG_9071.MOV'
+path =r'C:\Users\Jason\Desktop\20220416\IMG_9073.MOV'
 
 cap = cv2.VideoCapture(path)
 hw = []
@@ -50,6 +50,8 @@ while cap.isOpened():
         for i in range(0,len(data)):
             data = data.iloc[i]
             cv2.rectangle(frame, (int(data.xmin), int(data.ymin)), (int(data.xmax), int(data.ymax)), (0, 0, 255), 2)
+            mid = ((data.xmin + data.xmax)/2,(data.ymin + data.ymax)/2)
+            print(len(mid))
     except:
         pass
     # if not data.empty:
