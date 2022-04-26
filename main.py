@@ -12,6 +12,7 @@ os.chdir(r'C:\Users\Jason\Documents\GitHub\OpenCV-python')
 from predict import *
 import cv2
 import torch
+import time
 
 label = 1
 if label == 1:
@@ -19,8 +20,10 @@ if label == 1:
     model = load_model()
     label = 0
 
+#%%
+path =r'C:\Users\Jason\Desktop\20220416\IMG_9071.MOV'
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(path)
 hw = []
 
 while cap.isOpened():
@@ -33,26 +36,34 @@ while cap.isOpened():
 
     roi = frame[int(h/2):h,0:w]
     
-    # roi = cv2.imread('./resources/test.png')[:, :, ::-1]
-
-    results_roi = model(roi, size=640)  # includes NMS
+    # cv2.imwrite('./resources/test1.png', frame)
+    # time.sleep(0.3)
+    # roi = cv2.imread('./resources/test1.png')[:, :, ::-1]
+    
+    results_roi = model(frame, size=640)  # includes NMS
     results_roi.pred
     data = results_roi.pandas().xyxy[0]    # results_roi = model(roi, size=640)  # includes NMS
+    # time.sleep(0.3)
+    print(len(data))
     
-    
-    if not data.empty:
+    try:
+        for i in range(0,len(data)):
+            data = data.iloc[i]
+            cv2.rectangle(frame, (int(data.xmin), int(data.ymin)), (int(data.xmax), int(data.ymax)), (0, 0, 255), 2)
+    except:
+        pass
+    # if not data.empty:
 
-        mid = ((data.xmin + data.xmax)/2,(data.ymin + data.ymax)/2)
+    #     mid = ((data.xmin + data.xmax)/2,(data.ymin + data.ymax)/2)
     
-        point = ((mid[0]-(w/2))**2-(mid[1]-(w/2))**2)**(1/2)
+    #     point = ((mid[0]-(w/2))**2-(mid[1]-(h/4))**2)**(1/2)
         
-        point_loc = point[point == point.min()].index[0]
+    #     point_loc = point[point == point.min()].index[0]
     
-        tangle = data[point_loc:point_loc+1]
-        print(tangle)
+    #     tangle = data[point_loc:point_loc+1]
+    #     print(tangle)
         
-        cv2.rectangle(roi, (int(tangle.xmin), int(tangle.ymin)), (int(tangle.xmax), int(tangle.ymax)), (0, 0, 255), 2)
-
+    #     cv2.rectangle(roi, (int(tangle.xmin), int(tangle.ymin)), (int(tangle.xmax), int(tangle.ymax)), (0, 0, 255), 2)
 
     cv2.imshow("roi", roi)
     cv2.imshow("frame", frame)
@@ -63,6 +74,7 @@ while cap.isOpened():
 
 cv2.destroyAllWindows()
 cap.release()
+
 
 #%%
 #使用深度相機
