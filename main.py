@@ -21,9 +21,11 @@ if label == 1:
     label = 0
 
 #%%
-path =r'C:\Users\Jason\Desktop\20220416\IMG_9073.MOV'
+# path =r'C:\Users\Jason\Desktop\20220416\IMG_9073.MOV'
+# cap = cv2.VideoCapture(path)
 
-cap = cv2.VideoCapture(path)
+cap = cv2.VideoCapture(1)
+
 hw = []
 
 while cap.isOpened():
@@ -40,18 +42,19 @@ while cap.isOpened():
     # time.sleep(0.3)
     # roi = cv2.imread('./resources/test1.png')[:, :, ::-1]
     
-    results_roi = model(frame, size=640)  # includes NMS
+    results_roi = model(roi, size=640)  # includes NMS
     results_roi.pred
     data = results_roi.pandas().xyxy[0]    # results_roi = model(roi, size=640)  # includes NMS
     # time.sleep(0.3)
-    print(len(data))
+    # print(len(data))
     
     try:
         for i in range(0,len(data)):
             data = data.iloc[i]
-            cv2.rectangle(frame, (int(data.xmin), int(data.ymin)), (int(data.xmax), int(data.ymax)), (0, 0, 255), 2)
+            cv2.rectangle(roi, (int(data.xmin), int(data.ymin)), (int(data.xmax), int(data.ymax)), (0, 0, 255), 2)
             mid = ((data.xmin + data.xmax)/2,(data.ymin + data.ymax)/2)
-            print(len(mid))
+            print(mid)
+            cv2.circle(roi,(int(mid[0]),int(mid[1])), 15, (0, 0, 255), -1)
     except:
         pass
     # if not data.empty:
@@ -68,7 +71,7 @@ while cap.isOpened():
     #     cv2.rectangle(roi, (int(tangle.xmin), int(tangle.ymin)), (int(tangle.xmax), int(tangle.ymax)), (0, 0, 255), 2)
 
     cv2.imshow("roi", roi)
-    cv2.imshow("frame", frame)
+    # cv2.imshow("frame", frame)
 
     k = cv2.waitKey(1) & 0xFF
     if k == 27:
