@@ -21,10 +21,10 @@ if label == 1:
     label = 0
 
 #%%
-# path =r'C:\Users\Jason\Desktop\20220416\IMG_9073.MOV'
-# cap = cv2.VideoCapture(path)
+path =r'C:\Users\Jason\Desktop\20220416\IMG_9073.MOV'
+cap = cv2.VideoCapture(path)
 
-cap = cv2.VideoCapture(1)
+# cap = cv2.VideoCapture(1)
 
 hw = []
 
@@ -44,7 +44,7 @@ while cap.isOpened():
     
     results_roi = model(roi, size=640)  # includes NMS
     results_roi.pred
-    data = results_roi.pandas().xyxy[0]    # results_roi = model(roi, size=640)  # includes NMS
+    data = results_roi.pandas().xyxy[0]    # includes NMS
     # time.sleep(0.3)
     # print(len(data))
     
@@ -151,7 +151,22 @@ try:
             results_roi = model(color_image, size=640)  # includes NMS
             results_roi.pred
             data = results_roi.pandas().xyxy[0]  # includes NMS
-            print(data)
+            # print(data)
+            
+            try:
+                for i in range(0,len(data)):
+                    data = data.iloc[i]
+                    cv2.rectangle(color_image, (int(data.xmin), int(data.ymin)), (int(data.xmax), int(data.ymax)), (0, 0, 255), 2)
+                    cv2.rectangle(roi, (int(data.xmin), int(data.ymin)), (int(data.xmax), int(data.ymax)), (0, 0, 255), 2)
+                    mid = ((data.xmin + data.xmax)/2,(data.ymin + data.ymax)/2)
+                    print(mid)
+                    
+                    print(f"depth_frame.get_distance() = {depth_frame.get_distance(int(mid[0]),int(mid[1]))}")
+                    
+                    cv2.circle(color_image,(int(mid[0]),int(mid[1])), 10, (0, 0, 255), -1)
+                    cv2.circle(roi,(int(mid[0]),int(mid[1])), 10, (0, 0, 255), -1)
+            except:
+                pass
             
         # If depth and color resolutions are different, resize color image to match depth image for display
         # if depth_colormap_dim != color_colormap_dim:
