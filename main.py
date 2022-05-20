@@ -21,10 +21,10 @@ if label == 1:
     label = 0
 
 #%%
-path =r'C:\Users\Jason\Desktop\20220416\IMG_9073.MOV'
-cap = cv2.VideoCapture(path)
+# path =r'C:\Users\Jason\Desktop\20220416\IMG_9073.MOV'
+# cap = cv2.VideoCapture(path)
 
-# cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(1)
 
 hw = []
 
@@ -32,6 +32,7 @@ while cap.isOpened():
     _, frame = cap.read()
     
     if hw == []:
+        
         h = frame.shape[0]
         w = frame.shape[1]
         hw.append((h,w))
