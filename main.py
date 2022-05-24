@@ -21,10 +21,10 @@ if label == 1:
     label = 0
 
 #%%
-# path =r'C:\Users\Jason\Desktop\20220416\IMG_9073.MOV'
-# cap = cv2.VideoCapture(path)
+path =r'C:\Users\Jason\Desktop\20220416\IMG_9073.MOV'
+cap = cv2.VideoCapture(path)
 
-cap = cv2.VideoCapture(1)
+# cap = cv2.VideoCapture(1)
 
 hw = []
 
@@ -36,6 +36,7 @@ while cap.isOpened():
         h = frame.shape[0]
         w = frame.shape[1]
         hw.append((h,w))
+        region = []
 
     roi = frame[int(h/2):h,0:w]
     
@@ -52,6 +53,8 @@ while cap.isOpened():
     try:
         for i in range(0,len(data)):
             data = data.iloc[i]
+            #xmin,ymin,xmax,ymax
+            region = [int(data.xmin), int(data.ymin), int(data.xmax), int(data.ymax)]
             cv2.rectangle(roi, (int(data.xmin), int(data.ymin)), (int(data.xmax), int(data.ymax)), (0, 0, 255), 2)
             mid = ((data.xmin + data.xmax)/2,(data.ymin + data.ymax)/2)
             print(mid)
