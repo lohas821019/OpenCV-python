@@ -13,7 +13,7 @@ from predict import *
 import cv2
 import torch
 import time
-
+#%%
 label = 1
 if label == 1:
     global model 
@@ -21,10 +21,13 @@ if label == 1:
     label = 0
 
 #%%
-# path =r'C:\Users\Jason\Desktop\20220416\IMG_9073.MOV'
-# cap = cv2.VideoCapture(path)
 
-cap = cv2.VideoCapture(1)
+model = torch.hub.load('ultralytics/yolov5', 'custom', path='./arm_grass_fix_best.pt', force_reload=True) 
+model.eval()
+path =r'H:\output2.mp4'
+cap = cv2.VideoCapture(path)
+
+# cap = cv2.VideoCapture(1)
 
 hw = []
 
@@ -38,7 +41,8 @@ while cap.isOpened():
         hw.append((h,w))
         region = []
 
-    roi = frame[int(h/2):h,0:w]
+    # roi = frame[int(h/2):h,0:w]
+    roi =frame
     
     # cv2.imwrite('./resources/test1.png', frame)
     # time.sleep(0.3)
@@ -76,7 +80,7 @@ while cap.isOpened():
     #     cv2.rectangle(roi, (int(tangle.xmin), int(tangle.ymin)), (int(tangle.xmax), int(tangle.ymax)), (0, 0, 255), 2)
 
     cv2.imshow("roi", roi)
-    # cv2.imshow("frame", frame)
+    cv2.imshow("frame", frame)
 
     k = cv2.waitKey(1) & 0xFF
     if k == 27:
