@@ -14,12 +14,14 @@ https://www.youtube.com/watch?v=GgGro5IV-cs&ab_channel=Pysource
 """
 
 import cv2
-
+import numpy as np 
 cap = cv2.VideoCapture(0)
 
 while True:
     _, frame = cap.read()
 
+    blank_image = np.zeros((480,640,3), np.uint8)
+    cv2.imshow("blank_image", blank_image)
     cv2.imshow("frame", frame)
     k = cv2.waitKey(1) & 0xFF
     if k == 27:
